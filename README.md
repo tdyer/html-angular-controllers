@@ -2,32 +2,72 @@
 
 We are going to dive into Angular Controllers. Later we will see how views fit into the Angular architecture. 
 
+
+
 ## Objectives
+
+* Use the ViewModel pattern to comunicate between a Controller and a View.
+* Compare the Design Patterns and overall Architectual Pattern of Rails and Angular, MVC vs MVVM.
+* Learn how the Model View ViewModel (MVVM) pattern is realized by the $scope and mapped to properties or attributes in the View.
+* Use Dependency Injection to _inject_ the ViewModel, i.e. $scope.
+* Implement a Controller.
+* Implement an Angular Module to namespace and contain Angular components.
+* Show how Module dependencies can be defined.
+
+
+## Overview
+_"AngularJS is JavaScript framework developed by Google. It intents to provide solid base for the development of CRUD Single-Page Applications (SPA). SPA is web application, which once loaded, does not require full page reload when the user performs any actions with it. This means that all application resources (data, templates, scripts, styles) should be loaded with the initial request or better – the information and resources should be loaded on demand. Since most of the CRUD applications has common characteristics and requirements, AngularJS intents to provide the optimal set of them out-of-the-box. ..."_ [AngularJS in Patterns](http://blog.mgechev.com/2014/05/08/angularjs-in-patterns-part-1-overview-of-angularjs/)
+
+Few important features of AngularJS are:  
+
+* two-way data binding _(Done)_  
+* dependency injection _(In this lesson)_  
+* separation of concerns _(In this lesson)_  
+* testability  
+* abstraction _(Some in this lesson. More later)_  
 
 ![Angular Overview](AngularComponentOverview1.png)
 
-Just Controllers for now.
+We will be looking at Controllers, $scope and Modules in this lesson. We covered Views and directive in the last lesson, [Angular Views and Directives](https://github.com/ga-wdi-boston/wdi_9_angular_demo_directives)
 
 ## Demo 
 
 #### Setup
 
 We have a js directory that will contain the Angular javascript, angular.js.
+_At the end of the lesson we will have an app/controllers directory where the the controllers are defined._
 
-#### ViewModel, $scope
+#### ViewModel and $scope
 
-In Angular there is an implementation of a design pattern named _ViewModel_. The ViewModel is shared between a Controller and a View. __Use $scope to access the ViewModel__
+![ViewModel](ViewModel.png)
 
-* The Controller can add or change a property in the $scope. 
 
-Rails hides the mechanism that allows you to share attributes/variables between Controllers and Views. In Rails all one needs to do is create an instance variable in the Controller, @foo, and it becomes available to the View.
+In Angular there is an implementation of a design pattern named _ViewModel_. The ViewModel is shared between a Controller and a View. __Angular use $scope to access the ViewModel in the Controller.__
 
-In Angular, one must _explicitly_ set a property/attribute on the ViewModel, $scope, in the Controller for it to become available in the View.
+* The ViewModel is injectected into the Controller.
+* The Controller can add or change a properties in the $scope and make them visible to the View.
+
+Rails hides the mechanism that allows you to share properties between Controllers and Views. In Rails all one needs to do is create an instance variable in the Controller, @foo, and it becomes available to the View.
+
+In Angular, one must _explicitly_ set a property on the ViewModel, $scope, in the Controller for it to become available in the View. 
+
+For example, in order to share a property between a Controller and a View one __must__ set this property on the ViewModel, $scope.
+
+In the Controller:  
+```
+$scope.joe = {name: 'Joe', age: 38};
+$scope.dogYears = 7;
+```
+
+Is made available in the View:
+```
+ <p> {{joe.name} is only {{joe.age/dogYears}} in dog years.</p>
+ ```
 
 
 #### Simple Controller
 
-Let's refactor what we've done in the previous lesson about Views and Directives. And use a Controller.
+Let's refactor the code we've used in the previous lesson about Views and Directives into an Angular Controller.
 
 
 __Let's start with this code in directives_last.html from the previous View/Directives lesson.__
@@ -73,24 +113,28 @@ We are going to:
 
 __Add this to app/controllers/customersController.js__
 
+_Finished code is in customerControllers1_done.js_
+
 ```
 function CustomersController($scope){
   // 3. Define customers data in the ViewModel customers property
   $scope.customers = [{joined: '2000-12-02', name:'John', city:'Chandler', orderTotal: 9.9956}, {joined: '1965-01-25',name:'Zed', city:'Las Vegas', orderTotal: 19.99},{joined: '1944-06-15',name:'Tina', city:'New York', orderTotal:44.99}, {joined: '1995-03-28',name:'Dave', city:'Seattle', orderTotal:101.50}];
 
-  $scope.sortBy = name;
+  $scope.sortBy = "name";
   $scope.reverse = false;
 
   // 4. Define a sort click handlers
   $scope.doSort = function(propName){
     $scope.sortBy = propName;
-    $scope.reverse = $scope.!reverse;
+    $scope.reverse = !$scope.reverse;
   };
 }
 
 ```
 
-__Completed html is in controllers1.html.__  
+__Copy the directives_last.html to controllers.html.__  
+
+_Finished code is in controllers1_done.html_
 
 ```
  ...
@@ -110,150 +154,71 @@ __Completed html is in controllers1.html.__
 ```
 
 
+In the above:  
+* We are using the MVVM pattern by using a ViewModel, $scope.   
+* We are using __dependency injection__ to inject a new instance of $scope into the new instance of a CustomersController that was created for this HTTP Request.  
+* We are accessing the variables set in the $scope inside our View.  
+
+
 ## Lab 1
 
-Add input fields for email and age that have bindings to attributes. Show these attributes using expressions.
-
 ## Demo
 
+#### Modules.
 
-### ng-hide, ng-click directives.
+Angular Modules are used to encapsulate and namespace the components of the Angular application. 
 
-Lets please HTML validators and use _data-ng-_ directives.
+Modules will also allow us to explictly define the app's dependencies, the libraries the app depends on.
 
-__Create a file directives2.html.__
+__Remember that Javascript has no 'require', 'include' or 'import' like statements that allow us to indentify dependencies between files. This is extremely unusual in programming languages. So Angular provides this mechanism.__
 
-```
-<html data-ng-app>
-  <head>
-    <script type="text/javascript" src='js/angular.js'> </script>
-  </head>
-  <!-- initialize name attribute to the value 'James' -->
-  <body data-ng-init="name='James'">
+##### Add a Module for your application, in app/app.js
 
-    <!-- Bind hide to isHidden -->
-    <div data-ng-hide="isHidden">
-      <input type='text' data-ng-model="name" placeholder="Enter name"/>
-      <p> Name's value is: {{name}}</p>
-    </div>
-
-    <!-- Toggle the isHidden property between true and false -->
-    Hide: <input type='checkbox' data-ng-model="isHidden"/>
-    <br/>
-    <!-- Set the name property to Mortimer -->
-    <button data-ng-click="name='Mortimer'">Change Name</button>
-
-    <script type='text/javascript' src='js/angular.js'></script>
-  </body>
-</html>
-```
-
-Now we see a couple of new directives. 
-
-* ng-hide - Shows or hides the HTML element depending on the value of the isHidden attribute.  
-* ng-init - Evaluates expression, ``name='James'``, in the current scope.  Creates and initializes the name attribute.
-* ng-click - Evaluates the expression, `` name='Mortimer` ``. Changes the name attribute's value to 'Mortimer'  
-
-In the Chrome debugger notice how the div surrounding the input field gets the class ng-hide when one clicks the checkbox.
-
-
-
-### ng-switch, ng-show directives.
-
-
-__Create a file directives3.html.__
+_Finished code is in app/app1_done.js_
 
 ```
-<!doctype html>
-<html data-ng-app>
-  <head>
-    <title>More on Directives</title>
-    <link href='css/styles.css' rel="stylesheet" type='text/css'/>
-    <script type='text/javascript' src='js/angular.js'></script>
-  </head>
-  <!-- Set the initial model property, data.    -->
-  <body data-ng-init="data={name:'James', isVisible: true, loggedIn: false,   status: 'red'}">
-    <div data-ng-switch on="data.loggedIn">
-      <div data-ng-switch-when="true">
-        Welcome {{data.name}}
-      </div>
-      <div data-ng-switch-default data-ng-class="data.status">Login</div>
-    </div>
-    <br/>
-    <div data-ng-show="data.isVisible">
-      Name: <input type='text' data-ng-model="data.name" />
-      {{ data.name }}
-    </div>
-  </body>
-</html>
+(function customersAppIIFE(){
+  // Create a Module for this app with a name of 'customersApp'                                                              
+  // It has NO dependencies, empty Array as the second param   
+  angular.module('customersApp', []);
 
+})();
 ```
 
-This will create an object literal, data, that is seen in the view. The data.name is shown if you are logged in. Otherwise show a red login.
+Notice that we are using an IIFE to create a scope that one can declare variables that will not pollute the Global namespace.
 
-## Lab 2
+##### Modify the app/controllers/customersController.js and modify it from below.
 
-Change the _"data"__ object literal so that:  
-* Input fields are hidden.  
-* User is logged in.  
-
-
-## Demo
-
-### ng-repeat
-
-This will create an Array of people that contains an object literal for each person. _This will emulate an Array that we get from an API using Ajax_.
-
-We want to iterate over this people Array and __repeat__ some markup that will show each person.
-
-__Create a file directives_repeat.html.__
+_Finished code is in app/customerControllers2_done.js_
 
 ```
-<!document html>
-<html ng-app>
-  <head>
-    <script type='text/javascript' src='js/angular.js'></script>
-  </head>
-  <body>
-    <div ng-init="people=[{name: 'Tom', city:'Groton'}, {name: 'Mike',
-    city: 'Tewksbury'}, {name: 'Joe', city: 'Derry'}, {name: 'Ed',city:'Portland'}]">
-      <h3>Iterating through data with ng-repeat</h3>
-      <ul>
-        <li ng-repeat="person in people">{{person.name}} lives in {{person.city}}</li>
-      </ul>
-      <table>
-        <tr>
-          <th>Name</th>
-          <th>City</th>
-        </tr>
-        <tr ng-repeat="person in people">
-          <td>{{ person.name }}</td>
-          <td>{{ person.city}}</td>
-        </tr>
-      </table>
-    </div>
-  </body>
-</html>
+// Wrap the Controller declaration in an IFFE
+// This will avoid creating another varible, CustomersController
+// In the global namespace.
+(function customersControllerIIFE(){
 
+  // Controller
+  var CustomersController = function($scope){
+
+    $scope.customers = [{joined: '2000-12-02', name:'John', city:'Chandler', orderTotal: 9.9956}, {joined: '1965-01-25',name:'Zed', city:'Las Vegas', orderTotal: 19.99},{joined: '1944-06-15',name:'Tina', city:'New York', orderTotal:44.99}, {joined: '1995-03-28',name:'Dave', city:'Seattle', orderTotal:101.50}];
+
+    $scope.sortBy = "name";
+    $scope.reverse = false;
+
+    $scope.doSort = function(propName){
+      $scope.sortBy = propName;
+      $scope.reverse = !$scope.reverse;
+    };
+  };
+
+  // Prevent the minifier from breaking dependency injection.
+  CustomersController.$inject = ['$scope'];
+
+  // The Controller is part of the module.
+  angular.module('customersApp').controller('customersController', CustomersController);
+
+})();
 ```
-
-* ng-repeat - Add ng-repeat directive to the HTML element you want to repeat. Once for each member of a collection.
-
-Here we are repeating a list element and a table row for each person in the people Array.
-
-
-## Lab 
-Create  a list of products and generate a table for each product. 
-
-## Demo
-
-#### Filters
-
-Filters can be used to format data, convert it to json, limit the number of items to show, upcase or lower case a string or order data in a collection.
-
-
-
-
 ## Documentation
 
 [AngularJS](https://angularjs.org/)
