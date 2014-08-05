@@ -174,7 +174,7 @@ __Remember that Javascript has no 'require', 'include' or 'import' like statemen
 
 ##### Add a Module for your application, in app/app.js
 
-_Finished code is in app/app1_done.js_
+_Finished code is in app/app_done.js_
 
 ```
 (function customersAppIIFE(){
@@ -219,137 +219,6 @@ _Finished code is in app/customerControllers2_done.js_
 
 })();
 ```
-
-
-## Demo
-
-#### Routing
-
-Angular routing works _somewhat_ like Rails routes. But, there are some very crucial differences. 
-
-We will need to add another Angular module, ngRoute, that will be used to create routes. Below we'll see how this module is kept in it's won javascript file and how it's used.
-
-As we'll see, Angular routing explicitly connects URL/Paths to specific Angular Controllers and Views.
-	
-We are going to associate the path ``/`` with the Controller, ``app/controlllers/customersController.js``, and the View, ``app/views/customers.html``.
-
-	
-#### Create the shell page, index.html.
-
-```
-<!document html>
-<html ng-app="customersApp">
-  <head>
-    <script type='text/javascript' src='js/angular.js'></script>
-    <script type='text/javascript' src='js/angular-route.js'></script>
-    <script type='text/javascript' src='app/app.js'></script>
-    <script type='text/javascript' src='app/controllers/customersController.js'></script>
-  </head>
-
-  <body>
-    <div ng-view></div>
-  </body>
-</html>
-
-```
-
-* We have added a reference to the angular-route.js file that defines the ngRoute module.  
-	```<script type='text/javascript' src='js/angular-route.js'></script>	```
-
-	* We have already downloaded the ngRoute module that lives in it's own file, js/angular-route.js. 
-	* We are using angular version 1.2.2. So we downloaded this angular-route.js file from https://code.angularjs.org/1.2.2/ 
-
-* We have used the ng-view directive to define where the view for a route will be shown.  
-	* The index.html, shell page, is like a rails layout. And a ng-view directive is somewhat like a yield statement in a rails layout.
-
-#### Create a app/app.js file
-
-```
-(function customersAppIIFE(){
-  var app = angular.module('customersApp', ['ngRoute']);
-
-  app.config(function($routeProvider){
-    $routeProvider
-      .when('/',
-            {
-              controller: 'customersController',
-              templateUrl: 'app/views/customers.html'
-            }
-           )
-      .otherwise({redirectTo: '/'});
-  });
-
-})();
-
-```
-
-* This app will need the ngRoute module. So we define the app's dependency
-	``var app = angular.module('customersApp', ['ngRoute']);``  
-
-* The $routeProvider module is injected into the config. _(dependency injection)_  
-	`` app.config(function($routeProvider){ ``
-
-* Inside the config function we define two routes.
-	* The path '/' will invoke the customersController and use the View defined in the customers.html
-	* The $routeProvider.when method takes two params. A path, '/', and an object literal with two properties. One property for the controller and one for the view.
-	* The $routeProvider.otherwise method defines a default action that will be applied to any other path. It will redirect to '/'
-
-#### Create a app/controllers/customersController.js file
-
-
-```
-// Wrap the Controller declaration in an IFFE
-// This will avoid creating another varible, CustomersController
-// In the global namespace.
-(function customersControllerIIFE(){
-
-  // Controller
-  var CustomersController = function($scope){
-
-    $scope.customers = [{joined: '2000-12-02', name:'John', city:'Chandler', orderTotal: 9.9956}, {joined: '1965-01-25',name:'Zed', city:'Las Vegas', orderTotal: 19.99},{joined: '1944-06-15',name:'Tina', city:'New York', orderTotal:44.99}, {joined: '1995-03-28',name:'Dave', city:'Seattle', orderTotal:101.50}];
-
-    $scope.sortBy = "name";
-    $scope.reverse = false;
-
-    $scope.doSort = function(propName){
-      $scope.sortBy = propName;
-      $scope.reverse = !$scope.reverse;
-    };
-  };
-
-  // Prevent the minifier from breaking dependency injection.
-  CustomersController.$inject = ['$scope'];
-
-  // The Controller is part of the module.
-  angular.module('customersApp').controller('customersController', CustomersController);
-
-})();
-
-```
-
-Nothing new here.
-
-##### Start up a HTTP Server for this app.
-
-```
- ruby -run -e httpd . -p5000
-```
-
-##### Open the app in a browser.
-
-http://localhost:5000
-
-#### Inspect with Chrome
-
-The page to see how the div with ng-view is replaced by the view defined in app/views/customers.html
-
-## Lab
-
-## Demo
-
-#### More Routes
-
-
 
 ## Documentation
 
