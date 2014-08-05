@@ -1,8 +1,6 @@
-## Angular Expressions, Directives and Filters
+## Angular Controllers, ViewModel and Modules.
 
-We are going to dive into Angular Controllers. Later we will see how views fit into the Angular architecture. 
-
-
+We are going to dive into Angular Controllers, ViewModels and Modules. 
 
 ## Objectives
 
@@ -42,9 +40,9 @@ _At the end of the lesson we will have an app/controllers directory where the th
 ![ViewModel](ViewModel.png)
 
 
-In Angular there is an implementation of a design pattern named _ViewModel_. The ViewModel is shared between a Controller and a View. __Angular use $scope to access the ViewModel in the Controller.__
+In Angular there is an implementation of a design pattern named _ViewModel_. The ViewModel is shared between a Controller and a View. __In Angular, $scope is the ViewModel.__
 
-* The ViewModel is injectected into the Controller.
+* The ViewModel, ``$scope``, is injected into the Controller.
 * The Controller can add or change a properties in the $scope and make them visible to the View.
 
 Rails hides the mechanism that allows you to share properties between Controllers and Views. In Rails all one needs to do is create an instance variable in the Controller, @foo, and it becomes available to the View.
@@ -54,12 +52,14 @@ In Angular, one must _explicitly_ set a property on the ViewModel, $scope, in th
 For example, in order to share a property between a Controller and a View one __must__ set this property on the ViewModel, $scope.
 
 In the Controller:  
+
 ```
-$scope.joe = {name: 'Joe', age: 38};
+$scope.joe = {name: 'Joe', age: 38};  
 $scope.dogYears = 7;
 ```
 
 Is made available in the View:
+
 ```
  <p> {{joe.name} is only {{joe.age/dogYears}} in dog years.</p>
  ```
@@ -342,6 +342,13 @@ http://localhost:5000
 #### Inspect with Chrome
 
 The page to see how the div with ng-view is replaced by the view defined in app/views/customers.html
+
+## Lab
+
+## Demo
+
+#### More Routes
+
 
 
 ## Documentation
