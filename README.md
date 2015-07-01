@@ -53,16 +53,17 @@ For example, in order to share a property between a Controller and a View one __
 
 In the Controller:  
 
-```
+```javascript
 $scope.joe = {name: 'Joe', age: 38};  
 $scope.dogYears = 7;
 ```
 
 Is made available in the View:
 
-```
+
+```html
  <p> {{joe.name} is only {{joe.age/dogYears}} in dog years.</p>
- ```
+```
 
 
 #### Simple Controller
@@ -72,7 +73,7 @@ Let's refactor the code we've used in the previous lesson about Views and Direct
 
 __Let's start with this code in directives_last.html from the previous View/Directives lesson.__
 
-```
+```html
 <!document html>
 <html ng-app>
   <head>
@@ -100,7 +101,6 @@ __Let's start with this code in directives_last.html from the previous View/Dire
     </table>
   </body>
 </html>
-
 ```
 
 We are going to:  
@@ -115,7 +115,7 @@ __Add this to app/controllers/customersController.js__
 
 _Finished code is in customerControllers1_done.js_
 
-```
+```javascript
 function CustomersController($scope){
   // 3. Define customers data in the ViewModel customers property
   $scope.customers = [{joined: '2000-12-02', name:'John', city:'Chandler', orderTotal: 9.9956}, {joined: '1965-01-25',name:'Zed', city:'Las Vegas', orderTotal: 19.99},{joined: '1944-06-15',name:'Tina', city:'New York', orderTotal:44.99}, {joined: '1995-03-28',name:'Dave', city:'Seattle', orderTotal:101.50}];
@@ -136,7 +136,7 @@ __Copy the directives_last.html to controllers.html.__
 
 _Finished code is in controllers1_done.html_
 
-```
+```html
  ...
     <!-- 2. Move code into a Controller. -->
     <script type='text/javascript' src='app/controllers/customersController.js'></script>
