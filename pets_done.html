@@ -1,0 +1,28 @@
+<!document html>
+<html ng-app="petsApp">
+  <head>
+     <script type='text/javascript' src='bower_components/angular/angular.js'></script>
+     <script type='text/javascript' src='app/pets_app_done.js'></script>
+     <script type='text/javascript' src='app/controllers/petsController_done.js'></script>
+  </head>
+  <!-- like var petsCtrl = new PetsController(); -->
+  <body ng-controller="PetsController as petsCtrl">
+    <h3>Pets</h3>
+    <br/>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Species</th>
+        <th>Age</th>
+      </tr>
+      <tr ng-repeat="pet in petsCtrl.pets">
+        <td>{{ pet.name }}</td>
+        <td>{{ pet.species}}</td>
+        <td>{{ pet.age }}</td>
+      </tr>
+    </table>
+    <br/>
+    <span>Oldest pet: {{ petsCtrl.oldestPet().name }}</span><br/>
+    <span>Total number of pets: {{ petsCtrl.totalPets() }}</span>
+  </body>
+</html>

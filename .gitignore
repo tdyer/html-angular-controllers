@@ -17,6 +17,7 @@ Thumbs.db
 .Spotlight-V100
 .Trashes
 /log/*.log
+bower_components
 
 # Emacs temp files
 *~
