@@ -1,3 +1,5 @@
+![General Assembly Logo](http://i.imgur.com/ke8USTq.png)
+
 ## Angular Controllers, ViewModel and Modules.
 
 We are going to dive into Angular Controllers, ViewModels and Modules. 
@@ -33,17 +35,26 @@ Get AngularJS libraries.
 
 At the end of the lesson we will have an app/controllers directory where the the controllers are defined.
 
-#### ViewModel and $scope
+
 
 ![ViewModel](ViewModel.png)
 
 
+#### ViewModel and $scope
 
-#####In Angular there are **TWO** ways to share data between an Controller and a View. First, and preferred is use the Controller 'this'. Second is to use $scope.
+There is a concept of a *_View Model_* in Angular. This View Model will allow a Controller to share Data with a View. 
 
-### Using Controller 'this'
+#### [Angular View Model is NOT a Rails model: optional, little deep maybe](RailsViewModel.md)
 
-This is the recommended way to to share data.
+
+#####In Angular there are **TWO** ways to share data between an Controller and a View.   
+
+* First, and **preferred** is using the "Controller as" method.  The View Model is an instance of the Controller.
+* Second is to use `$scope`. The View Model is `$scope`.
+
+### Using "Controller as" method.
+
+This is the recommended way to to share data. The View Model will be an instance of the Controller.
 
 **Create a pets.html**
 
@@ -97,7 +108,10 @@ We are creating a Controller for pets. It's really just a Javascript Constructor
 
 Then we create an array of object literals, each one holding data about a pet. *The controller instance we create in the view will have it's 'pets' property set to this array of pets.*
 
-Notice that we put all the code in an IIFE that get's passed the *global* angular variable. *We do this so we can put private variables in this scope that will NOT pollute the global namespace. 
+Notice that we put all the code in an IIFE that get's passed the *global* angular variable. *Passing in a global is just an optimization, JS doesn't need to search up though all enclosing scopes to look for a variable.*
+
+*We do this so we can put private variables in this scope that will NOT pollute the global namespace.*
+
 *We haven't yet created any private variables, but we may as time goes on*
 
 **Update the pets.html to use this controller**
@@ -105,8 +119,10 @@ Notice that we put all the code in an IIFE that get's passed the *global* angula
 ```html
   ...
   <head>
-  <script type='text/javascript' src='app/pets_app_done.js'></script>
-  <script type='text/javascript' src='app/controllers/petsController_done.js'></script>
+  <script type='text/javascript' src='bower_components/angular/angular.js'><\
+/script>
+  <script type='text/javascript' src='app/app.js'></script>
+  <script type='text/javascript' src='app/controllers/petsController.js'></script>
   </head>
 
   <body ng-controller="PetsController as petsCtrl">
@@ -134,26 +150,25 @@ First, we included the javascript files for the app, app.js, and the controller,
 Then in the ``body`` tag we created a ``ng-controller`` attribute. We set this attribute to have a value that will make the one *instance* of the PetsController avaialble in the View. The name will be 'petsCtrl' in the view will refer to this ONE instance of the PetsController.
 
 
-**Add this to the PetsController, right above the angular.module line. **
+**Add this to the PetsController, right above the angular.module line.**
 
 ```javascript
 ... 
-PetsController.prototype.totalPets = ƒ(pet){
+  PetsController.prototype.totalPets = function(pet){
     return this.pets.length;
   };
 
-  PetsController.prototype.oldestPet = ƒ(){
+  PetsController.prototype.oldestPet = function(){
     var candidatePet = this.pets[0];
 
     this.pets.forEach(ƒ(pet){
       if (pet.age > candidatePet.age) {
-	candidatePet = pet;
+	     candidatePet = pet;
       }
     });
 
     return candidatePet;
   };
-
 ... 
 ```
 
@@ -172,7 +187,7 @@ This will use these two Controller methods in the View.
 
 
 ### Using $scope (OPTIONAL)
-The second way uses an implementation of a design pattern named _ViewModel_. The ViewModel is shared between a Controller and a View. __In Angular, $scope is the ViewModel.__
+The ViewModel is shared between a Controller and a View. __In this case $scope is the ViewModel.__
 
 * The ViewModel, ``$scope``, is injected into the Controller.
 * The Controller can add or change a properties in the $scope and make them visible to the View.
