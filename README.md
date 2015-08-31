@@ -217,16 +217,17 @@ Is made available in the View:
 Let's refactor the code we've used in the previous lesson about Views and Directives into an Angular Controller.
 
 
-1. Start with the code from the last directives lesson, directives_last.html.
-2. Rename this html file to customers.html.
-3. Create a application module for this customer's app in app/customers.js
-5. Update the ng-app directive in the customers.html, ya know in the html tag. 
-4. Create a controller in the app/controllers/customersController.js
-	4.1 Create an array of customers in the controller, *hint move it from the ng-init.*  
-	4.2 Create controller properties for ``sortBy`` and ``reverse``.  
-5. Update the body tag so we will create one instance of the CustomersController for the view. The view will refer to this instance ``as`` customersCtrl.
-6. Invoke the CustomersController.doSort method where needed. *Yes, you must create this controller method.*  
-7. Invoke the CustomersController.numOfCustomers method where needed. *Yes, you must create this controller method.* 
+1. Start with the code from the last directives lesson, directives_last.html.  
+2. Rename this html file to customers.html.  
+3. Create a application module for this customer's app in app/customers.js  
+4. Update the ng-app directive in the customers.html, ya know in the html tag. 
+5. Create a controller in the app/controllers/customersController.js  
+	5.1 Create an array of customers in the controller, *hint move it from the ng-init.*  
+	5.2 Create controller properties for ``sortBy`` and ``reverse``.  
+
+6. Update the body tag so we will create one instance of the CustomersController for the view. The view will refer to this instance ``as`` customersCtrl.  
+7. Invoke the CustomersController.doSort method where needed. *Yes, you must create this controller method.*  
+8. Invoke the CustomersController.numOfCustomers method where needed. *Yes, you must create this controller method.* 
 
 **The customers_done.html file will have the finished template.**
 
